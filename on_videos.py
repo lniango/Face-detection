@@ -1,9 +1,11 @@
 import numpy as np
 import cv2
+from skimage.feature import hog
+from skimage import data, exposure
+import matplotlib.pyplot as plt
 
-haar = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-
-def face_detect(img):
+def face_detect_haar(img):
+    haar = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = haar.detectMultiScale(gray, 1.3, 5)
 
@@ -13,21 +15,26 @@ def face_detect(img):
     return img
 
 
-#Capturing video input
-cap = cv2.VideoCapture(0) #webcam
-#Processing each frame
-while True:
-    ret, frame = cap.read()
-    if ret == False:
-        break
+if __name__ == '__main__':
+    #Capturing video input
+    cap = cv2.VideoCapture(0) #webcam
+    #cap = cv2.VideoCapture("Identite.jpg")
+    # Processing each frame
+    while True:
+        ret, frame = cap.read()
+        if ret == False:
+            break
 
-    frame = face_detect(frame)
-    cv2.imshow('Detect', frame)
+        #frame = face_detect_haar(frame)
+        frame = face_detect_haar(frame)
+        cv2.imshow('Detect', frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-cap.release()
-cv2.destroyAllWindows()
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+
+
 
 '''
 Extending the Code:

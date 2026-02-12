@@ -1,4 +1,5 @@
 #Source: https://ashadali.medium.com/image-processing-with-opencv-face-detection-on-images-and-videos-2896f54c8caf
+# https://www.geeksforgeeks.org/machine-learning/face-recognition-using-artificial-intelligence/
 
 import numpy as np
 import cv2
