@@ -17,7 +17,7 @@ def face_detect_haar(img):
 
 if __name__ == '__main__':
     #Capturing video input
-    cap = cv2.VideoCapture(0) #webcam
+    cap = cv2.VideoCapture(1) #webcam
     #cap = cv2.VideoCapture("Identite.jpg")
     # Processing each frame
     while True:
