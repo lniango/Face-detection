@@ -12,31 +12,27 @@ import imutils
 #HOG and SVM
 #############################
 #https://www.geeksforgeeks.org/computer-vision/histogram-of-oriented-gradients/
-''''
-def face_detect_hog(img): #histogram of gradient
-    #gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    features, hog_image = hog(img,
-                              orientations=8,
-                              pixels_per_cell=(16, 16),
-                              cells_per_block=(2, 2),
-                              visualize=True,
-                              channel_axis=-1)
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(24, 9))
-    ax1.axis('off')
-    ax1.imshow(img, cmap=plt.cm.gray)
-    ax1.set_title('Input image', fontsize=15)
 
-    ax2.axis('off')
-    ax2.imshow(hog_image, cmap=plt.cm.gray)
-    ax2.set_title('Histogram of Oriented Gradients', fontsize=15)
-    plt.show()
-'''
 # https://pyimagesearch.com/2021/04/19/face-detection-with-dlib-hog-and-cnn/
-def face_detect_hog(img):
-    detector = dlib.get_frontal_face_detector()
+def face_detect_hog(img, detector): 
+    if img is None:
+        print("Frame is None")
+        return img
+    
+    if not isinstance(img, np.ndarray):
+        print("Not numpy:", type(img))
+        return img
+
+    if img.size == 0:
+        print("Empty frame")
+        return img
+    #print("frame type:", type(img))
+    #print("shape:", getattr(img, "shape", None))
+
 
     #image = cv2.imread(img)
     image = imutils.resize(img, width=600)
+    #image = np.ascontiguousarray(image)
     rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     #extract rectangles
     print("performing face detection")
@@ -51,17 +47,26 @@ def face_detect_hog(img):
     return image
 
 if __name__ == '__main__':
+    detector = dlib.get_frontal_face_detector()
+    
     #Capturing video input
-    cap = cv2.VideoCapture(0) #webcam
+    cap = cv2.VideoCapture(1) #webcam
     #cap = cv2.VideoCapture("Identite.jpg")
     # Processing each frame
     while True:
         ret, frame = cap.read()
-        if ret == False:
-            break
+        #if ret == False:
+        #   break
+        if not ret:
+            print("Camera failed")
+            continue
+        
+        if frame is None or frame.size == 0:
+            print("Bad frame")
+            continue
 
         #frame = face_detect_haar(frame)
-        frame = face_detect_hog(frame)
+        frame = face_detect_hog(frame, detector)
         cv2.imshow('Detect', frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -69,9 +74,3 @@ if __name__ == '__main__':
     cap.release()
     cv2.destroyAllWindows()
 
-
-
-'''
-Extending the Code:
-    Combine with tracking algorithms for smoother real-time face tracking.
-'''
